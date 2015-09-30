@@ -1,4 +1,11 @@
 Image = React.createClass({
+  getInitialState: function() {
+    return {
+      wwwc: '',
+      zoom: 1.0
+    };
+  },
+
   onImageRendered() {
     var domNode = $(this.getDOMNode());
     var topLeft = domNode.find(".topLeft");
@@ -8,8 +15,11 @@ Image = React.createClass({
 
     var element = domNode.find(".viewportElement").get(0);
     var viewport = cornerstone.getViewport(element)
-    bottomLeft.text("WW/WC: " + Math.round(viewport.voi.windowWidth) + "/" + Math.round(viewport.voi.windowCenter));
-    bottomRight.text("Zoom: " + viewport.scale.toFixed(2));
+
+    this.setState({
+      wwwc: Math.round(viewport.voi.windowWidth) + "/" + Math.round(viewport.voi.windowCenter),
+      zoom: viewport.scale.toFixed(2)
+    });
   },
 
   returnFalse(e) {
@@ -40,6 +50,7 @@ Image = React.createClass({
     var element = $(domNode).find('.viewportElement').get(0);
     $(element).on("CornerstoneImageRendered", this.onImageRendered);
     window.addEventListener('resize', this.handleResize);
+
 
 
     cornerstone.enable(element);
@@ -81,10 +92,10 @@ Image = React.createClass({
               Hospital
           </div>
           <div className="bottomRight dicomTag">
-              Zoom:
+              Zoom: {this.state.zoom}
           </div>
           <div className="bottomLeft dicomTag">
-              WW/WC:
+              WW/WC: {this.state.wwwc}
           </div>
       </div>
       );
